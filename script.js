@@ -1,99 +1,49 @@
-const gameContainer = document.getElementById("game");
-let card1 = null;
-let card2 = null;
-let cardsFlipped = 0;
-let noClicking = false;
+const input = document.querySelector('#fruit');
+const suggestions = document.querySelector('.suggestions ul');
 
-const COLORS = [
-  "red",
-  "blue",
-  "green",
-  "orange",
-  "purple",
-  "red",
-  "blue",
-  "green",
-  "orange",
-  "purple"
-];
+const fruit = ['Apple', 'Apricot', 'Avocado 🥑', 'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry', 'Boysenberry', 'Currant', 'Cherry', 'Coconut', 'Cranberry', 'Cucumber', 'Custard apple', 'Damson', 'Date', 'Dragonfruit', 'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Gooseberry', 'Grape', 'Raisin', 'Grapefruit', 'Guava', 'Honeyberry', 'Huckleberry', 'Jabuticaba', 'Jackfruit', 'Jambul', 'Juniper berry', 'Kiwifruit', 'Kumquat', 'Lemon', 'Lime', 'Loquat', 'Longan', 'Lychee', 'Mango', 'Mangosteen', 'Marionberry', 'Melon', 'Cantaloupe', 'Honeydew', 'Watermelon', 'Miracle fruit', 'Mulberry', 'Nectarine', 'Nance', 'Olive', 'Orange', 'Clementine', 'Mandarine', 'Tangerine', 'Papaya', 'Passionfruit', 'Peach', 'Pear', 'Persimmon', 'Plantain', 'Plum', 'Pineapple', 'Pomegranate', 'Pomelo', 'Quince', 'Raspberry', 'Salmonberry', 'Rambutan', 'Redcurrant', 'Salak', 'Satsuma', 'Soursop', 'Star fruit', 'Strawberry', 'Tamarillo', 'Tamarind', 'Yuzu'];
 
-// here is a helper function to shuffle an array
-// it returns the same array with values shuffled
-// it is based on an algorithm called Fisher Yates if you want ot research more
-function shuffle(array) {
-  let counter = array.length;
+function search(str) {
+	let results = [];
+	const lowerStr = str.toLowerCase();
 
-  // While there are elements in the array
-  while (counter > 0) {
-    // Pick a random index
-    let index = Math.floor(Math.random() * counter);
+	results = fruit.filter(fruitItem => fruitItem.toLowerCase().includes(lowerStr));
 
-    // Decrease counter by 1
-    counter--;
-
-    // And swap the last element with it
-    let temp = array[counter];
-    array[counter] = array[index];
-    array[index] = temp;
-  }
-
-  return array;
+	return results;
 }
 
-let shuffledColors = shuffle(COLORS);
+function searchHandler(e) {
+	const inputVal = e.target.value;
+	const results = search(inputVal);
 
-// this function loops over the array of colors
-// it creates a new div and gives it a class with the value of the color
-// it also adds an event listener for a click for each card
-function createDivsForColors(colorArray) {
-  for (let color of colorArray) {
-    const newDiv = document.createElement("div");
-    newDiv.classList.add(color);
-    newDiv.addEventListener("click", handleCardClick);
-    gameContainer.append(newDiv);
-  }
+	if (inputVal.length > 0) {
+		showSuggestions(results, inputVal);
+	} else {
+		suggestions.innerHTML = '';
+	}
 }
 
-function handleCardClick(e) {
-  if (noClicking) return;
-  if (e.target.classList.contains("flipped")) return
+function showSuggestions(results, inputVal) {
+	suggestions.innerHTML = '';
 
-  let currentCard = e.target;
-  currentCard.style.backgroundColor = currentCard.classList[0];
+	if (results.length === 0) {
+		suggestions.innerHTML = '<li>No results found</li>';
+        return;
+	}
 
-  if (!card1 || !card2) {
-    currentCard.classList.add("flipped");
-    card1 = card1 || currentCard;
-    card2 = currentCard === card1 ? null : currentCard;
-  }
-
-  if (card1 && card2) {
-    noClicking = true;
-    let gif1 = card1.className;
-    let gif2 = card2.className;
-
-    if (gif1 === gif2) {
-      cardsFlipped +=2
-      card1.removeEventListner("click", handleCardClick);
-      card2.removeEventListner("click", handleCardClick);
-      card1 = null;
-      card2 = null;
-      noClicking = false;
-    } else {
-      setTimeout(function() {
-        card1.style.backgroundColor = "";
-        card2.style.backgroundColor = "";
-        card1.classList.remove("flipped");
-        card2.classList.remove("flipped");
-        card1 = null;
-        card2 = null;
-        noClicking = false;
-      }, 1000);
-    }
-  }
-
-  if (cardsFlipped === COLORS.length) alert("game over!");
+	results.forEach(fruitItem => {
+		const suggestionItem = document.createElement('li');
+		suggestionItem.innerHTML = fruitItem;
+		suggestions.appendChild(suggestionItem);
+	});
 }
 
-// when the DOM loads
-createDivsForColors(shuffledColors);
+function useSuggestion(e) {
+	if (e.target.tagName === 'LI') {
+		input.value = e.target.innerText;
+		suggestions.innerHTML = '';
+	}
+}
+
+input.addEventListener('keyup', searchHandler);
+suggestions.addEventListener('click', useSuggestion);
