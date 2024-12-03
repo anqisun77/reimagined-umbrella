@@ -1,0 +1,64 @@
+body {
+    font-family: 'Copse', sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #game-container {
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #003366;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0055a4;
+  }
+  
+  #loading {
+    font-size: 1.5em;
+    margin: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th {
+    background-color: #003366;
+    color: white;
+    padding: 10px;
+    font-size: 1.5em;
+  }
+  
+  td {
+    background-color: #e0e0e0;
+    padding: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    border: 1px solid #bbb;
+    cursor: pointer;
+  }
+  
+  td:hover {
+    background-color: #ccc;
+  }
+  
